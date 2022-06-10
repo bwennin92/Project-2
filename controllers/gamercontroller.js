@@ -5,6 +5,7 @@ module.exports = {
   show,
   gamerNew,
   gamerCreate,
+  deleteGame,
 };
 
 let gamerIndex = (req, res) => {
@@ -30,4 +31,15 @@ let gamerCreate = (req, res) => {
       res.redirect(`/gamersbackalley/${games._id}`);
     });
   });
+};
+let deleteGame = (req, res) => {
+  Gamer.findById(req.params.gamerId, (err, gamer) => {
+    gamer.reviews.id(req.params.reviewId).remove();
+    gamer.reviews.id(req.params.reviewId).content = req.body.content;
+    gamer.reviews.id(req.params.reviewId).rating = req.body.rating;
+    gamer.save(function (err) {
+      if (err) console.log(err);
+    });
+  });
+  res.redirect(`/Gamers/${req.params.gamerId}`);
 };
